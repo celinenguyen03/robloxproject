@@ -44,7 +44,7 @@ MaxVisits AS (
 SELECT
     [Date Created],
     Genre,
-	Title,
+    Title,
     gameID,
     [Total Visits],
     [Average Active Users]
@@ -78,7 +78,7 @@ WITH ParsedVisits AS (
             WHEN [Total Visits] LIKE '%B%' THEN CAST(REPLACE(REPLACE([Total Visits], 'B', ''), '+', '') AS FLOAT) * 1000000000
             WHEN [Total Visits] LIKE '%M%' THEN CAST(REPLACE(REPLACE([Total Visits], 'M', ''), '+', '') AS FLOAT) * 1000000
             WHEN ISNUMERIC(REPLACE(REPLACE([Total Visits], '+', ''), '.', '')) = 1 THEN CAST(REPLACE(REPLACE([Total Visits], '+', ''), '.', '') AS FLOAT)
-            ELSE NULL -- Handle other or invalid formats
+            ELSE NULL
         END AS NumericTotalVisits,
         LAG([Active Users], 1, NULL) OVER (PARTITION BY gameID ORDER BY TRY_CONVERT(DATE, [Last Updated])) AS PrevActiveUsers,
         LAG([Favorites], 1, NULL) OVER (PARTITION BY gameID ORDER BY TRY_CONVERT(DATE, [Last Updated])) AS PrevFavorites,
@@ -86,7 +86,7 @@ WITH ParsedVisits AS (
             WHEN [Total Visits] LIKE '%B%' THEN CAST(REPLACE(REPLACE([Total Visits], 'B', ''), '+', '') AS FLOAT) * 1000000000
             WHEN [Total Visits] LIKE '%M%' THEN CAST(REPLACE(REPLACE([Total Visits], 'M', ''), '+', '') AS FLOAT) * 1000000
             WHEN ISNUMERIC(REPLACE(REPLACE([Total Visits], '+', ''), '.', '')) = 1 THEN CAST(REPLACE(REPLACE([Total Visits], '+', ''), '.', '') AS FLOAT)
-            ELSE NULL -- Handle other or invalid formats
+            ELSE NULL
         END, 1, NULL) OVER (PARTITION BY gameID ORDER BY TRY_CONVERT(DATE, [Last Updated])) AS PrevTotalVisits
     FROM
         RobloxProject..BigRobloxGames
